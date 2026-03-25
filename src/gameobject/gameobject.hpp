@@ -18,7 +18,7 @@ namespace Game {
         GameObject(const sf::Vector2f&, const sf::Vector2f&);
         virtual ~GameObject();
 
-        virtual bool IsColliding(const GameObject&) const = 0;
+        virtual bool aabbOverlap(const GameObject&) const;
     };
 
 }

@@ -13,7 +13,9 @@ game_files = [
   'src/main.cpp',
   'src/gengine/engine.cpp',
   'src/gameobject/gameobject.cpp',
-  'src/snakeh/snake.cpp'
+  'src/snakeh/snake.cpp',
+  'src/platform/platform.cpp',
+  'src/food/food.cpp'
   ]
 
 executable(

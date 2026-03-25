@@ -9,7 +9,9 @@ namespace sf {
 
 namespace Game {
 
+    struct Platform;
     struct SnakeH;
+    struct Food;
 
     struct Engine {
             Engine();
@@ -34,8 +36,12 @@ namespace Game {
 
             sf::RenderWindow* p_window  { nullptr };
             sf::RectangleShape* p_shape { nullptr };
+            sf::RectangleShape* p_shape1{ nullptr };
+            sf::RectangleShape* p_shape2{ nullptr };
 
+            Platform* p_plat            { nullptr };
             SnakeH* p_snake             { nullptr };
+            Food* p_food                { nullptr };
     };
 
 }
