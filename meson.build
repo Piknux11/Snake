@@ -11,7 +11,9 @@ sfml_graphics_deps = dependency('sfml-graphics')
 
 game_files = [
   'src/main.cpp',
-  'src/gengine/engine.cpp'
+  'src/gengine/engine.cpp',
+  'src/gameobject/gameobject.cpp',
+  'src/snakeh/snake.cpp'
   ]
 
 executable(

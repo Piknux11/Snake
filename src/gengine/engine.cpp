@@ -34,10 +34,10 @@ namespace Game {
     Engine::InitVariables() 
     {
 
-        p_snake = new SnakeH {
-            .position_     = { WINDOW_WIDTH/2, WINDOW_HEIGHT/2 },
-            .acceleration_ = { 0.f, 0.f } 
-        };
+        p_snake = new SnakeH (
+            { WINDOW_WIDTH/2, WINDOW_HEIGHT/2 }, 
+            { 0.f, 0.f } 
+        );
 
         if (p_snake == nullptr)
             Engine::~Engine(); 
