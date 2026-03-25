@@ -1,37 +1,41 @@
 #pragma once
 
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
 #include <string>
+
+namespace sf {
+    class RenderWindow;
+    class RectangleShape;
+}
 
 namespace Game {
 
     struct SnakeH;
 
-    class Engine : public sf::RenderWindow {
-        public:
-            Engine();
+    struct Engine {
+            [[nodiscard]] Engine();
             ~Engine();
 
-        private:
-            static constexpr int WINDOW_WIDTH  { 800 };
-            static constexpr int WINDOW_HEIGHT { 800 };
+            static constexpr int WINDOW_WIDTH         { 800 };
+            static constexpr int WINDOW_HEIGHT        { 800 };
+            static constexpr int FRAME_RATE           { 10 };
+            static constexpr float DELTA_TIME         { 1 / static_cast<float>( FRAME_RATE ) };
+            static constexpr int DEFAULT_SCORE_GAME   { 0 };
+            static constexpr std::string TITLE_WINDOW { "Demo 1.0" };
 
-            static constexpr std::string TITLE_WINDOW { "Snake" };
+            operator bool() const;
 
-            static constexpr int FRAME_RATE   { 10 };
-            static constexpr float DELTA_TIME { 1 / static_cast<float>( FRAME_RATE ) };
-
-            static constexpr int DEFAULT_SCORE_GAME { 0 };
-
+            void InitWindow();
+            void InitVariables();
             void EventsWindow();
             void Update();
             void Draw();
 
             int score_ { DEFAULT_SCORE_GAME };
 
-            SnakeH* p_snake             { nullptr };
+            sf::RenderWindow* p_window  { nullptr };
             sf::RectangleShape* p_shape { nullptr };
+
+            SnakeH* p_snake             { nullptr };
     };
 
 }
