@@ -6,8 +6,16 @@ namespace Game {
         : GameObject( { 0.f, 0.f } , 
                       { 0.f, 0.f } )
     {
-            position_.x = dist(gen);
-            position_.y = dist(gen);
+        position_.x = dist(gen);
+        position_.y = dist(gen);
+    }
+
+    Food::Food( const std::filesystem::path& tex ) 
+        : GameObject( { 0.f, 0.f },
+                       tex )
+    {
+        position_.x = dist(gen);
+        position_.y = dist(gen);
     }
 
     Food::~Food() {}

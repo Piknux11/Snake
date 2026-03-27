@@ -8,6 +8,7 @@ namespace Game {
     struct Food : public GameObject {
 
         Food();
+        Food( const std::filesystem::path& );
         ~Food();
 
         void resolveCollision( const GameObject& );

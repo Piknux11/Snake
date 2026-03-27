@@ -5,6 +5,7 @@
 namespace sf {
     class RenderWindow;
     class RectangleShape;
+    class Sprite;
 }
 
 namespace Game {
@@ -37,7 +38,7 @@ namespace Game {
             sf::RenderWindow* p_window  { nullptr };
             sf::RectangleShape* p_shape { nullptr };
             sf::RectangleShape* p_shape1{ nullptr };
-            sf::RectangleShape* p_shape2{ nullptr };
+    	    sf::Sprite* p_sprite_apple  { nullptr };
 
             Platform* p_plat            { nullptr };
             SnakeH* p_snake             { nullptr };

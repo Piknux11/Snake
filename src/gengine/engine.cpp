@@ -4,8 +4,8 @@
 #include "../food/food.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <print>
-#include <iostream>
 #include <optional>
 
 namespace Game {
@@ -46,18 +46,14 @@ namespace Game {
             { 0.f, 0.f } 
         );
 
-        p_food = new Food();
+        p_food = new Food( "public/sprites/apple.png" );
 
-        if (p_snake == nullptr)
-            Engine::~Engine(); 
+        p_sprite_apple = new sf::Sprite(p_food->texture_);
+        p_sprite_apple->scale( { 3.5f, 3.5f } );
 
         p_shape = new sf::RectangleShape {p_snake->size_};
         p_shape1 = new sf::RectangleShape {p_plat->size_};
-        p_shape2 = new sf::RectangleShape {p_plat->size_};
-        p_shape2->setFillColor(sf::Color::Red);
 
-        if (p_shape == nullptr)
-            Engine::~Engine();
 
     }
 
@@ -99,7 +95,7 @@ namespace Game {
 
         p_shape->setPosition(p_snake->position_);
         p_shape1->setPosition(p_plat->position_);
-        p_shape2->setPosition(p_food->position_);
+        p_sprite_apple->setPosition(p_food->position_);
 
     }
 
@@ -110,13 +106,19 @@ namespace Game {
 
         p_window->draw(*p_shape);
         p_window->draw(*p_shape1);
-        p_window->draw(*p_shape2);
+        p_window->draw(*p_sprite_apple);
 
         p_window->display();
     }
 
     Engine::~Engine() 
     {
+        if (p_food != nullptr)
+            delete p_food;
+
+        if (p_sprite_apple != nullptr )
+            delete p_sprite_apple;
+
         if (p_plat != nullptr)
             delete p_plat;
 
