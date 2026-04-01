@@ -1,7 +1,7 @@
 project (
   'Snake', 
   'cpp',
-  version : '0.0',
+  version : '0.1.0',
   default_options : ['cpp_std=c++23']
   )
 
@@ -12,14 +12,11 @@ sfml_graphics_deps = dependency('sfml-graphics')
 game_files = [
   'src/main.cpp',
   'src/gengine/engine.cpp',
-  'src/gameobject/gameobject.cpp',
-  'src/snakeh/snake.cpp',
-  'src/platform/platform.cpp',
-  'src/food/food.cpp'
+  'src/gameobject/gameobject.cpp'
   ]
 
 executable(
-  'snake',
+  'game',
   game_files,
   install : true,
   dependencies : [

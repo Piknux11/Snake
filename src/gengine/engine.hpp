@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 namespace sf {
     class RenderWindow;
@@ -9,10 +10,6 @@ namespace sf {
 }
 
 namespace Game {
-
-    struct Platform;
-    struct SnakeH;
-    struct Food;
 
     struct Engine {
             Engine();
@@ -35,14 +32,7 @@ namespace Game {
 
             int score_ { DEFAULT_SCORE_GAME };
 
-            sf::RenderWindow* p_window  { nullptr };
-            sf::RectangleShape* p_shape { nullptr };
-            sf::RectangleShape* p_shape1{ nullptr };
-    	    sf::Sprite* p_sprite_apple  { nullptr };
-
-            Platform* p_plat            { nullptr };
-            SnakeH* p_snake             { nullptr };
-            Food* p_food                { nullptr };
+            std::unique_ptr<sf::RenderWindow> p_window  { nullptr };
     };
 
 }
