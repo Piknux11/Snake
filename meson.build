@@ -12,7 +12,10 @@ sfml_graphics_deps = dependency('sfml-graphics')
 game_files = [
   'src/main.cpp',
   'src/gengine/engine.cpp',
-  'src/gameobject/gameobject.cpp'
+  'src/gameobject/gameobject.cpp',
+  'src/gameobject/staticobject/staticobject.cpp',
+  'src/gameobject/staticobject/platform/platform.cpp',
+  'src/gameobject/dynamicobject/dynamicobject.cpp'
   ]
 
 executable(

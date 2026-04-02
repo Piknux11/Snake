@@ -3,54 +3,21 @@
 
 namespace Game {
 
-    GameObject::GameObject( const sf::Vector2f& size,
-                            const sf::Vector2f& position )
-        : size_     (size) ,
-          position_ (position)
-    {}
-
-    GameObject::GameObject( const sf::Vector2f& size,
-                            const sf::Vector2f& position,
-                            const std::string&  tex_path )
-        : size_         (size),
-          position_     (position), 
-          texture_path_ (tex_path) 
-    {
-        this->checkTexturePath();
-    }
-
-    GameObject::GameObject( const sf::Vector2f& position,
-                            const std::string&  tex_path )
-        : position_     (position),
-          texture_path_ (tex_path)
-    {
-        this->checkTexturePath();
-    }
-
     GameObject::GameObject( const sf::Vector2f& size, 
                             const sf::Vector2f& position, 
-                            const std::string&  tex_path, 
-                            const std::string&  label ) 
+                            const std::string&  label, 
+                            const std::string&  tex_path )
         : size_         (size),
           position_     (position),
-          label_        (label),
-          texture_path_ (tex_path)
+          label_        (label)
     {
-        this->checkTexturePath();
+        this->loadTexture( tex_path );
     }
 
-    GameObject::GameObject( const sf::Vector2f& position, 
-                            const std::string&  tex_path, 
-                            const std::string&  label ) 
-        : size_         (position),
-          label_        (label),
-          texture_path_ (tex_path)
-    {
-        this->checkTexturePath();
-    }
-
+    /*
     GameObject::~GameObject() 
     {}
+    */
 
     bool 
     GameObject::aabbOverlap( const GameObject& obj ) const 
@@ -61,12 +28,16 @@ namespace Game {
                position_.y + size_.y > obj.position_.y;
     }
 
-    void
-    GameObject::checkTexturePath() const 
+    bool
+    GameObject::loadTexture( const std::string& path )
     {
-        if ( std::filesystem::exists( texture_path_ ) ) 
-            std::println("The file exists!!");
-        else 
-            std::println("The file dont find!!");
+        if ( !std::filesystem::exists( path ) ) {
+            std::println("[{}] The texture didnt find: {}", label_, path);
+            return false;
+        }
+
+        texture_ = path;
+        std::println("The texture was load: {}", label_, path);
+        return true;
     }
 }

@@ -11,6 +11,11 @@ namespace sf {
 
 namespace Game {
 
+    struct GameObject;
+    struct StaticObject;
+    struct DynamicObject;
+    struct Platform;
+
     struct Engine {
             Engine();
             ~Engine();
@@ -33,6 +38,9 @@ namespace Game {
             int score_ { DEFAULT_SCORE_GAME };
 
             std::unique_ptr<sf::RenderWindow> p_window  { nullptr };
+            std::unique_ptr<sf::RectangleShape> shape   { nullptr };
+            std::unique_ptr<Platform>       p_platform  { nullptr };
+            std::unique_ptr<DynamicObject>  p_caja      { nullptr };
     };
 
 }
