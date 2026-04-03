@@ -6,7 +6,7 @@ namespace Game {
 
     struct DynamicObject : public GameObject {
 
-        static constexpr float DEFAULT_ACCELERATION_X { 130.f };
+        static constexpr float DEFAULT_ACCELERATION_X { 7500.f };
         static constexpr float DEFAULT_ACCELERATION_Y { 980.f };
         static constexpr float DEFAULT_VELOCITY_X     { 0.f };
         static constexpr float DEFAULT_VELOCITY_Y     { 0.f };

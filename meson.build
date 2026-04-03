@@ -15,7 +15,8 @@ game_files = [
   'src/gameobject/gameobject.cpp',
   'src/gameobject/staticobject/staticobject.cpp',
   'src/gameobject/staticobject/platform/platform.cpp',
-  'src/gameobject/dynamicobject/dynamicobject.cpp'
+  'src/gameobject/dynamicobject/dynamicobject.cpp',
+  'src/gameobject/dynamicobject/player/player.cpp',
   ]
 
 executable(

@@ -3,6 +3,7 @@
 #include "../gameobject/staticobject/staticobject.hpp"
 #include "../gameobject/staticobject/platform/platform.hpp"
 #include "../gameobject/dynamicobject/dynamicobject.hpp"
+#include "../gameobject/dynamicobject/player/player.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -39,10 +40,10 @@ namespace Game {
     {
 
         p_platform = std::make_unique<Platform>
-            ( sf::Vector2f( 50.f, 50.f ), 
+            ( sf::Vector2f( 200.f, 50.f ), 
               sf::Vector2f( 250.f, 400.f ) );
 
-        p_caja = std::make_unique<DynamicObject>
+        p_player = std::make_unique<Player>
             ( sf::Vector2f( 50.f, 50.f ), 
               sf::Vector2f( 250.f, 1.f ) );
 
@@ -63,33 +64,22 @@ namespace Game {
     void 
     Engine::Update() 
     {
-        /*
         if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Left ) ) {
-            p_snake->acceleration_.x = -1.f * SnakeH::DEFAULT_ACCELERATION_X;
-            p_snake->acceleration_.y = 0;
+            p_player->move(-1, DELTA_TIME);
         }
         else if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Right ) ) {
-            p_snake->acceleration_.x = SnakeH::DEFAULT_ACCELERATION_X;
-            p_snake->acceleration_.y = 0;
+            p_player->move(1, DELTA_TIME);
         }
-        else if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Up )) {
-            p_snake->acceleration_.y = -1.f * SnakeH::DEFAULT_ACCELERATION_Y;
-            p_snake->acceleration_.x = 0;
+        
+        if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Space )) {
+            p_player->jump(DELTA_TIME);
         }
         else if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Down )) {
-            p_snake->acceleration_.y = SnakeH::DEFAULT_ACCELERATION_Y;
-            p_snake->acceleration_.x = 0;
         }
 
-        p_snake->position_.x += DELTA_TIME * p_snake->acceleration_.x;
-        p_snake->position_.y += DELTA_TIME * p_snake->acceleration_.y;
-
-        p_plat->resolveCollision(*p_snake);
-        p_food->resolveCollision(*p_snake);
-        */
-        p_caja->update(DELTA_TIME);
-        p_caja->resolveCollision(*p_platform);
-        p_platform->resolveCollision(*p_caja);
+        p_player->update(DELTA_TIME);
+        p_player->resolveCollision(*p_platform);
+        p_platform->resolveCollision(*p_player);
     }
 
     void 
@@ -97,7 +87,7 @@ namespace Game {
     {
         p_window->clear();
 
-        shape->setPosition(p_caja->position_);
+        shape->setPosition(p_player->position_);
         p_window->draw(*shape);
 
         shape->setPosition(p_platform->position_);
@@ -111,7 +101,7 @@ namespace Game {
         p_window.reset();
         shape.reset();
         p_platform.reset();
-        p_caja.reset();
+        p_player.reset();
     }
 
     Engine::operator 

@@ -14,6 +14,7 @@ namespace Game {
     struct GameObject;
     struct StaticObject;
     struct DynamicObject;
+    struct Player;
     struct Platform;
 
     struct Engine {
@@ -40,7 +41,7 @@ namespace Game {
             std::unique_ptr<sf::RenderWindow> p_window  { nullptr };
             std::unique_ptr<sf::RectangleShape> shape   { nullptr };
             std::unique_ptr<Platform>       p_platform  { nullptr };
-            std::unique_ptr<DynamicObject>  p_caja      { nullptr };
+            std::unique_ptr<Player>         p_player    { nullptr };
     };
 
 }
