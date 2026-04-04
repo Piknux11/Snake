@@ -13,12 +13,37 @@ namespace Game {
     {}
 
     void
-    Player::update( const float& delta_time ) 
+    Player::update( float delta_time ) 
     {
+
+        if ( jump_requested_ && on_ground_) {
+            velocity_.y = -JUMP_FORCE;
+            on_ground_ = false;
+            is_jumping_ = true;
+            jump_hold_timer_ = 0.f;
+            jump_requested_ = false;
+        }
+
+        if ( is_jumping_ && velocity_.y < 0.f ) {
+            if ( jump_hold_timer_ < JUMP_HOLD_MAX_TIME ) {
+                velocity_.y -= JUMP_HOLD_FORCE * delta_time;
+                jump_hold_timer_ += delta_time;
+            }
+            else {
+                is_jumping_ = false;
+            }
+        }
+        else {
+            is_jumping_ = false;
+        }
+
+        //if ( on_ground_ ) {
+        velocity_.x *= FRICTION;
+        //}
+
         this->applyGravity( delta_time );
         position_ += velocity_ * delta_time;
 
-        velocity_.x = DEFAULT_VELOCITY_X;
         on_ground_ = false;
     }
 
@@ -35,17 +60,22 @@ namespace Game {
     }
 
     void 
-    Player::move( const short& dir, 
-                  const float& delta_time ) 
+    Player::move( float dir ) 
     {
-        velocity_.x += dir * (acceleration_.x * delta_time);
+        velocity_.x = dir * MOVE_SPEED;
     }
 
     void 
-    Player::jump( const float& delta_time )
+    Player::requestJump( )
     {
         if ( on_ground_ ) {
-            velocity_.y -= JUMP * delta_time;
+            jump_requested_ = true;
         }
+    }
+
+    void
+    Player::releaseJump( ) 
+    {
+        is_jumping_ = false;
     }
 }

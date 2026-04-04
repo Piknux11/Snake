@@ -13,7 +13,7 @@ namespace Game {
     {}
 
     void
-    DynamicObject::update( const float& delta_time ) 
+    DynamicObject::update( float delta_time ) 
     {
         this->applyGravity( delta_time );
         position_ += velocity_ * delta_time;
@@ -33,7 +33,7 @@ namespace Game {
     }
 
     void 
-    DynamicObject::applyGravity( const float& delta_time )
+    DynamicObject::applyGravity( float delta_time )
     {
         if ( !on_ground_ ) {
             velocity_.y += acceleration_.y * delta_time;

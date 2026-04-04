@@ -37,7 +37,7 @@ namespace Game {
         }
 
         texture_ = path;
-        std::println("The texture was load: {}", label_, path);
+        std::println("[{}] The texture was load: {}", label_, path);
         return true;
     }
 }

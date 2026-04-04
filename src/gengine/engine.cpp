@@ -65,21 +65,22 @@ namespace Game {
     Engine::Update() 
     {
         if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Left ) ) {
-            p_player->move(-1, DELTA_TIME);
+            p_player->move(-1);
         }
         else if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Right ) ) {
-            p_player->move(1, DELTA_TIME);
+            p_player->move(1);
         }
         
         if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Space )) {
-            p_player->jump(DELTA_TIME);
+            p_player->requestJump();
         }
-        else if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Down )) {
+        else {
+            p_player->releaseJump();
         }
 
-        p_player->update(DELTA_TIME);
-        p_player->resolveCollision(*p_platform);
-        p_platform->resolveCollision(*p_player);
+        p_player->update( DELTA_TIME );
+        p_player->resolveCollision( *p_platform );
+        p_platform->resolveCollision( *p_player );
     }
 
     void 

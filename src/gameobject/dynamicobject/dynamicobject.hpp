@@ -23,8 +23,8 @@ namespace Game {
 
         ~DynamicObject();
 
-        virtual void update( const float& delta_time );
+        virtual void update( float delta_time );
         virtual void resolveCollision( const GameObject& obj );
-        void applyGravity( const float& delta_time );
+        void applyGravity( float delta_time );
     };
 }
