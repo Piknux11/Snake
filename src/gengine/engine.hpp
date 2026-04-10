@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <array>
 #include <memory>
 
 namespace sf {
@@ -21,8 +22,8 @@ namespace Game {
             Engine();
             ~Engine();
 
-            static constexpr int WINDOW_WIDTH         { 800 };
-            static constexpr int WINDOW_HEIGHT        { 800 };
+            static constexpr int WINDOW_WIDTH         { 10 * 50 };
+            static constexpr int WINDOW_HEIGHT        { 10 * 50 };
             static constexpr int FRAME_RATE           { 60 };
             static constexpr float DELTA_TIME         { 1 / static_cast<float>( FRAME_RATE ) };
             static constexpr int DEFAULT_SCORE_GAME   { 0 };
@@ -35,13 +36,14 @@ namespace Game {
             void EventsWindow();
             void Update();
             void Draw();
+            void LoadLevel();
 
             int score_ { DEFAULT_SCORE_GAME };
 
-            std::unique_ptr<sf::RenderWindow> p_window  { nullptr };
-            std::unique_ptr<sf::RectangleShape> shape   { nullptr };
-            std::unique_ptr<Platform>       p_platform  { nullptr };
-            std::unique_ptr<Player>         p_player    { nullptr };
+            std::unique_ptr<sf::RenderWindow>          p_window  { nullptr };
+            std::unique_ptr<sf::RectangleShape>        shape     { nullptr };
+            std::array<std::unique_ptr<Platform>, 30>  platforms { nullptr };
+            std::unique_ptr<Player>                    p_player  { nullptr };
     };
 
 }

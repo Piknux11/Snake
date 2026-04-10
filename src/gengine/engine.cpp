@@ -9,6 +9,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <print>
 #include <optional>
+#include <cmath>
 
 namespace Game {
 
@@ -39,13 +40,7 @@ namespace Game {
     Engine::InitVariables() 
     {
 
-        p_platform = std::make_unique<Platform>
-            ( sf::Vector2f( 200.f, 50.f ), 
-              sf::Vector2f( 250.f, 400.f ) );
-
-        p_player = std::make_unique<Player>
-            ( sf::Vector2f( 50.f, 50.f ), 
-              sf::Vector2f( 250.f, 1.f ) );
+        this->LoadLevel(); 
 
         shape = std::make_unique<sf::RectangleShape>
             ( sf::Vector2f( 50.f, 50.f ) );
@@ -70,7 +65,7 @@ namespace Game {
         else if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Right ) ) {
             p_player->move(1);
         }
-        
+
         if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Space )) {
             p_player->requestJump();
         }
@@ -78,9 +73,24 @@ namespace Game {
             p_player->releaseJump();
         }
 
-        p_player->update( DELTA_TIME );
-        p_player->resolveCollision( *p_platform );
-        p_platform->resolveCollision( *p_player );
+
+        p_player->friction(); 
+        p_player->updateX( DELTA_TIME );
+
+        for (auto& plat : platforms) {
+            if (plat != nullptr)
+                p_player->resolveCollisionX( *plat );
+        }
+
+        p_player->jump( DELTA_TIME );
+        p_player->applyGravity( DELTA_TIME );
+        p_player->updateY( DELTA_TIME ); 
+
+        for ( auto& plat : platforms ) {
+            if ( plat != nullptr )
+                p_player->resolveCollisionY( *plat );
+        }
+        
     }
 
     void 
@@ -91,19 +101,59 @@ namespace Game {
         shape->setPosition(p_player->position_);
         p_window->draw(*shape);
 
-        shape->setPosition(p_platform->position_);
-        p_window->draw(*shape);
+        for (int i=0 ; i<(int)platforms.size() ; i++) {
+            if (platforms.at(i) != nullptr) {
+                shape->setPosition(platforms.at(i)->position_);
+                p_window->draw(*shape);
+            }
+        }
 
         p_window->display();
     }
 
-    Engine::~Engine() 
+    void
+    Engine::LoadLevel()
     {
-        p_window.reset();
-        shape.reset();
-        p_platform.reset();
-        p_player.reset();
+        // 0 nada bloque vacio
+        // 1 bloques 
+        // 2 player, esto es temporal
+        
+        size_t pos = 0;
+        int eje[10][10] = 
+        { { 0, 0, 0 ,0 ,0 ,0 ,0 ,0, 0, 0 }, 
+          { 0, 0, 0 ,0 ,0 ,0 ,0 ,0, 0, 0 }, 
+          { 0, 0, 0 ,0 ,0 ,0 ,0 ,0, 0, 0 }, 
+          { 0, 0, 0 ,0 ,0 ,1 ,1 ,1, 0, 0 }, 
+          { 1, 1, 1 ,0 ,0 ,0 ,0 ,0, 1, 0 }, 
+          { 0, 0, 0 ,0 ,0 ,0 ,0 ,0, 0, 0 }, 
+          { 0, 0, 0 ,0 ,0 ,0 ,0 ,0, 0, 0 }, 
+          { 2, 0, 0 ,0 ,0 ,0 ,0 ,1, 1, 1 }, 
+          { 1, 1, 1 ,0 ,0 ,1 ,1 ,0, 0, 0 }, 
+          { 0, 0, 0 ,0 ,0 ,0 ,0 ,0, 0, 0 } };
+
+        for (int i=0 ; i<10 ; i++) {
+            for (int j=0 ; j<10 ; j++) {
+                if (eje[i][j] == 1) {
+                    platforms.at(pos) = std::make_unique<Platform>
+                        (
+                            sf::Vector2f( 50.f, 50.f ),
+                            sf::Vector2f( j * 50.f, i * 50.f )
+                        );
+                    pos++;
+                }
+                else if (eje[i][j] == 2) {
+                    p_player = std::make_unique<Player>
+                        ( 
+                            sf::Vector2f( 50.f, 50.f ), 
+                            sf::Vector2f( j * 50.f , i * 50.f ) 
+                        );
+                }
+            }
+        }
     }
+
+    Engine::~Engine() 
+    {}
 
     Engine::operator 
     bool() const 

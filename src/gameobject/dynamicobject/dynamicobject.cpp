@@ -21,7 +21,7 @@ namespace Game {
     }
 
     void
-    DynamicObject::resolveCollision( const GameObject& obj ) 
+    DynamicObject::resolveCollision( GameObject& obj ) 
     {
         if ( aabbOverlap(obj) ) {
             std::string label = obj.label_;

@@ -14,8 +14,75 @@ namespace Game {
 
     void
     Player::update( float delta_time ) 
-    {
+    {}
 
+    void
+    Player::updateX( float delta_time )
+    {
+        position_.x += velocity_.x * delta_time;
+    }
+
+    void
+    Player::updateY( float delta_time ) 
+    {
+        position_.y += velocity_.y * delta_time;
+    }
+
+    void 
+    Player::resolveCollision( GameObject& obj ) 
+    {}
+
+    void
+    Player::resolveCollisionX( const GameObject& obj )
+    {
+        if ( !this->aabbOverlap(obj) ) return;
+
+        const float overlapLeft  { ( position_.x + size_.x ) - obj.position_.x };
+        const float overlapRight { ( obj.position_.x + obj.size_.x ) - position_.x };
+
+        if ( overlapLeft < overlapRight ) {
+            position_.x -= overlapLeft; 
+        }
+        else {
+            position_.x += overlapRight; 
+        }
+    }
+
+    void
+    Player::resolveCollisionY( const GameObject& obj )
+    {
+        if ( !this->aabbOverlap(obj) ) return;
+
+        const float overlapUp   { ( position_.y + size_.y ) - obj.position_.y };
+        const float overlapDown { ( obj.position_.y + obj.size_.y ) - position_.y };
+
+        if ( overlapUp < overlapDown ) {
+            position_.y -= overlapUp;
+            on_ground_ = true;
+            is_jumping_ = false;
+        }
+        else {
+            position_.y += overlapDown;
+        }
+    }
+
+    void 
+    Player::move( float dir ) 
+    {
+        velocity_.x = dir * MOVE_SPEED;
+    }
+
+    void
+    Player::friction()
+    {
+        //if ( on_ground_ ) {
+        velocity_.x *= FRICTION;
+        //}
+    }
+
+    void
+    Player::jump( float delta_time )
+    {
         if ( jump_requested_ && on_ground_) {
             velocity_.y = -JUMP_FORCE;
             on_ground_ = false;
@@ -26,7 +93,7 @@ namespace Game {
 
         if ( is_jumping_ && velocity_.y < 0.f ) {
             if ( jump_hold_timer_ < JUMP_HOLD_MAX_TIME ) {
-                velocity_.y -= JUMP_HOLD_FORCE * delta_time;
+                velocity_.y -= JUMP_HOLD_FORCE;
                 jump_hold_timer_ += delta_time;
             }
             else {
@@ -36,33 +103,6 @@ namespace Game {
         else {
             is_jumping_ = false;
         }
-
-        //if ( on_ground_ ) {
-        velocity_.x *= FRICTION;
-        //}
-
-        this->applyGravity( delta_time );
-        position_ += velocity_ * delta_time;
-
-        on_ground_ = false;
-    }
-
-    void 
-    Player::resolveCollision( const GameObject& obj ) 
-    {
-        if ( aabbOverlap(obj) ) {
-            std::string label = obj.label_;
-
-            if ( label == "platform-up" ) {
-                on_ground_ = true;
-            }
-        }
-    }
-
-    void 
-    Player::move( float dir ) 
-    {
-        velocity_.x = dir * MOVE_SPEED;
     }
 
     void 
