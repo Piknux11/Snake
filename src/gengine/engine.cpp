@@ -7,6 +7,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/View.hpp>
 #include <print>
 #include <optional>
 #include <cmath>
@@ -28,11 +29,13 @@ namespace Game {
                 TITLE_WINDOW
             );
 
-        if ( p_window == nullptr ) {
-            std::println("Error to init Window");
-            Engine::~Engine();
-        }
+        p_pview = std::make_unique<sf::View>
+            (
+                sf::Vector2f( WINDOW_WIDTH/2, WINDOW_HEIGHT/2 ),
+                sf::Vector2f( VIEW_WIDTH, VIEW_HEIGHT )
+            );
 
+        p_window->setView(*p_pview);
         p_window->setFramerateLimit( FRAME_RATE );
     }
 
@@ -60,19 +63,11 @@ namespace Game {
     Engine::Update() 
     {
         if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Left ) ) {
-            p_player->move(-1);
+            p_player->move(-1, DELTA_TIME);
         }
         else if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Right ) ) {
-            p_player->move(1);
+            p_player->move(1, DELTA_TIME);
         }
-
-        if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Space )) {
-            p_player->requestJump();
-        }
-        else {
-            p_player->releaseJump();
-        }
-
 
         p_player->friction(); 
         p_player->updateX( DELTA_TIME );
@@ -80,6 +75,11 @@ namespace Game {
         for (auto& plat : platforms) {
             if (plat != nullptr)
                 p_player->resolveCollisionX( *plat );
+        }
+
+
+        if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::Space )) {
+            p_player->requestJump();
         }
 
         p_player->jump( DELTA_TIME );
@@ -90,6 +90,8 @@ namespace Game {
             if ( plat != nullptr )
                 p_player->resolveCollisionY( *plat );
         }
+
+        this->UpdateView();
         
     }
 
@@ -126,9 +128,9 @@ namespace Game {
           { 0, 0, 0 ,0 ,0 ,1 ,1 ,1, 0, 0 }, 
           { 1, 1, 1 ,0 ,0 ,0 ,0 ,0, 1, 0 }, 
           { 0, 0, 0 ,0 ,0 ,0 ,0 ,0, 0, 0 }, 
-          { 0, 0, 0 ,0 ,0 ,0 ,0 ,0, 0, 0 }, 
-          { 2, 0, 0 ,0 ,0 ,0 ,0 ,1, 1, 1 }, 
-          { 1, 1, 1 ,0 ,0 ,1 ,1 ,0, 0, 0 }, 
+          { 0, 0, 0 ,0 ,0 ,0 ,0 ,1, 0, 1 }, 
+          { 2, 0, 0 ,0 ,1 ,1 ,0 ,1, 1, 0 }, 
+          { 1, 1, 1 ,1 ,0 ,0 ,1 ,0, 0, 0 }, 
           { 0, 0, 0 ,0 ,0 ,0 ,0 ,0, 0, 0 } };
 
         for (int i=0 ; i<10 ; i++) {
@@ -150,6 +152,29 @@ namespace Game {
                 }
             }
         }
+    }
+
+    void
+    Engine::UpdateView()
+    {
+        // La cámara sigue al jugador con un offset para ver más adelante
+        sf::Vector2f target = p_player->position_;
+
+        // Limitar la cámara para que no muestre fuera del mundo
+        // Ajusta estos valores al tamaño de tu nivel
+        const float WORLD_LEFT   {   0.f };
+        const float WORLD_RIGHT  { 2000.f };
+        const float WORLD_TOP    {   0.f };
+        const float WORLD_BOTTOM { 800.f };
+
+        // Clamp: la cámara no se sale del mundo
+        target.x = std::max( target.x, WORLD_LEFT   + VIEW_WIDTH  / 2.f );
+        target.x = std::min( target.x, WORLD_RIGHT  - VIEW_WIDTH  / 2.f );
+        target.y = std::max( target.y, WORLD_TOP    + VIEW_HEIGHT / 2.f );
+        target.y = std::min( target.y, WORLD_BOTTOM - VIEW_HEIGHT / 2.f );
+
+        p_pview->setCenter( target );
+        p_window->setView( *p_pview );
     }
 
     Engine::~Engine() 

@@ -1,4 +1,5 @@
 #include "player.hpp"
+#include <algorithm>
 
 namespace Game {
 
@@ -26,6 +27,7 @@ namespace Game {
     Player::updateY( float delta_time ) 
     {
         position_.y += velocity_.y * delta_time;
+        on_ground_ = false;
     }
 
     void 
@@ -41,10 +43,10 @@ namespace Game {
         const float overlapRight { ( obj.position_.x + obj.size_.x ) - position_.x };
 
         if ( overlapLeft < overlapRight ) {
-            position_.x -= overlapLeft; 
+            position_.x = obj.position_.x - size_.x; 
         }
         else {
-            position_.x += overlapRight; 
+            position_.x = obj.position_.x + obj.size_.x; 
         }
     }
 
@@ -57,19 +59,19 @@ namespace Game {
         const float overlapDown { ( obj.position_.y + obj.size_.y ) - position_.y };
 
         if ( overlapUp < overlapDown ) {
-            position_.y -= overlapUp;
-            on_ground_ = true;
-            is_jumping_ = false;
+            position_.y = obj.position_.y - size_.y;
+            on_ground_  = true;
+            velocity_.y = 0;
         }
         else {
-            position_.y += overlapDown;
+            position_.y = obj.position_.y + obj.size_.y;
         }
     }
 
     void 
-    Player::move( float dir ) 
+    Player::move( float dir, float delta_time ) 
     {
-        velocity_.x = dir * MOVE_SPEED;
+        velocity_.x = dir * (MOVE_SPEED / delta_time);
     }
 
     void
@@ -77,6 +79,8 @@ namespace Game {
     {
         //if ( on_ground_ ) {
         velocity_.x *= FRICTION;
+        velocity_.x = std::clamp(velocity_.x, -MOVE_SPEED, MOVE_SPEED);
+        if (std::abs(velocity_.x) < 0.05f) velocity_.x = 0.f;
         //}
     }
 
@@ -86,22 +90,7 @@ namespace Game {
         if ( jump_requested_ && on_ground_) {
             velocity_.y = -JUMP_FORCE;
             on_ground_ = false;
-            is_jumping_ = true;
-            jump_hold_timer_ = 0.f;
             jump_requested_ = false;
-        }
-
-        if ( is_jumping_ && velocity_.y < 0.f ) {
-            if ( jump_hold_timer_ < JUMP_HOLD_MAX_TIME ) {
-                velocity_.y -= JUMP_HOLD_FORCE;
-                jump_hold_timer_ += delta_time;
-            }
-            else {
-                is_jumping_ = false;
-            }
-        }
-        else {
-            is_jumping_ = false;
         }
     }
 
@@ -111,11 +100,9 @@ namespace Game {
         if ( on_ground_ ) {
             jump_requested_ = true;
         }
+        else {
+            jump_requested_ = false;
+        }
     }
 
-    void
-    Player::releaseJump( ) 
-    {
-        is_jumping_ = false;
-    }
 }

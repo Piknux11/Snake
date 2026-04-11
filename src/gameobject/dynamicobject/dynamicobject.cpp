@@ -15,32 +15,18 @@ namespace Game {
     void
     DynamicObject::update( float delta_time ) 
     {
-        this->applyGravity( delta_time );
-        position_ += velocity_ * delta_time;
-        on_ground_ = false;
     }
 
     void
     DynamicObject::resolveCollision( GameObject& obj ) 
     {
-        if ( aabbOverlap(obj) ) {
-            std::string label = obj.label_;
-
-            if (label == "platform-up") {
-                on_ground_ = true;
-            }
-        }
     }
 
     void 
     DynamicObject::applyGravity( float delta_time )
     {
         if ( !on_ground_ ) {
-            velocity_.y += acceleration_.y * delta_time;
-
-            if ( velocity_.y > MAX_FALL_SPEED ) {
-                velocity_.y = MAX_FALL_SPEED;
-            }
+            velocity_.y += GRAVITY * delta_time;
         }
     }
 }

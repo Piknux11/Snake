@@ -1,5 +1,4 @@
 #include "platform.hpp"
-#include <cmath>
 
 namespace Game {
 
